@@ -51,7 +51,7 @@ async def ask_menu(city_name: str, event: str, message: qqbot.Message):
 
 @command("/疫情")
 async def ask_covid(city_name: str, event: str, message: qqbot.Message):
-    city_name = '中国' if city_name is None else city_name
+    city_name = "中国" if city_name is None else city_name
     ret = get_covid_data(city_name)
     await _send_message(ret, event, message)
     return True

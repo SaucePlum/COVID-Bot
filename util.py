@@ -28,7 +28,7 @@ def get_menu():
 
 
 def get_covid_data(area: str) -> str:
-    qqbot.logger.info('正在查询 %s 的疫情消息' % area)
+    qqbot.logger.info("正在查询 %s 的疫情消息" % area)
     # 应该不会有人闲到写全称吧
     if area == "内蒙古自治区":
         area = "内蒙古"
@@ -47,19 +47,17 @@ def get_covid_data(area: str) -> str:
     raw_data = raw_data.json()
     if raw_data["ret"] != 0:
         qqbot.logger.info("ret不为0，疑似有问题")
-    qqbot.logger.info('%s 的疫情消息获取成功,正在解析中' % area)
+    qqbot.logger.info("%s 的疫情消息获取成功,正在解析中" % area)
     data = raw_data["data"]["diseaseh5Shelf"]
     tree = data["areaTree"]
     all_province = tree[0]["children"]
     # 先最特殊情况
     if area in ("中国", "全国", "国内"):
-        qqbot.logger.info('包含特殊情况, 正在处理特殊情况')
+        qqbot.logger.info("包含特殊情况, 正在处理特殊情况")
         data.pop("areaTree")
         msg += f"为你查询到中国疫情：\n"
         msg += f"🟠 现存确诊(含港澳台)：{data['chinaTotal']['nowConfirm']}(+{data['chinaAdd']['confirm']})\n"
-        msg += (
-            f"🟣 现存无症状：{data['chinaTotal']['noInfect']}(+{data['chinaAdd']['noInfect']})\n"
-        )
+        msg += f"🟣 现存无症状：{data['chinaTotal']['noInfect']}(+{data['chinaAdd']['noInfect']})\n"
         msg += (
             f"🔵 境内现存确诊：{data['chinaTotal']['localConfirmH5']}("
             + ("+" if data["chinaAdd"]["localConfirmH5"] > 0 else "")
@@ -135,7 +133,7 @@ def get_covid_data(area: str) -> str:
         if result["today"]["isUpdated"]
         else "🔴 当前地区信息今日无更新\n"
     )
-    qqbot.logger.info('数据处理成功, %s最新疫情消息已发送' % area)
+    qqbot.logger.info("数据处理成功, %s最新疫情消息已发送" % area)
     if type_ in ["(省)", "(特别行政区)"]:  # 没有获取到风险地区
         return msg
     else:
@@ -143,7 +141,7 @@ def get_covid_data(area: str) -> str:
 
 
 def get_grade_data(area: str) -> str:
-    qqbot.logger.info('正在查询 %s 的风险地区' % area)
+    qqbot.logger.info("正在查询 %s 的风险地区" % area)
     try:  # 不知道稳不稳，先用try包一下
         url_risk_area = (
             "https://wechat.wecity.qq.com/api/PneumoniaTravelNoAuth/queryAllRiskLevel"
@@ -157,7 +155,7 @@ def get_grade_data(area: str) -> str:
         risk_area_data = requests.post(url=url_risk_area, json=payload_json)
         risk_area_data = risk_area_data.json()
         risk_area_data = risk_area_data["args"]["rsp"]
-        qqbot.logger.info('%s 的风险地区获取成功, 正在解析中' % area)
+        qqbot.logger.info("%s 的风险地区获取成功, 正在解析中" % area)
         mediumRiskAreaList = risk_area_data["mediumRiskAreaList"]
         highRiskAreaList = risk_area_data["highRiskAreaList"]
 
@@ -188,8 +186,8 @@ def get_grade_data(area: str) -> str:
         else:
             msg += "  N/A\n"
 
-        qqbot.logger.info('数据处理成功, %s最新疫情消息已发送' % area)
+        qqbot.logger.info("数据处理成功, %s最新疫情消息已发送" % area)
         return msg
     except:
-        qqbot.logger.info('数据有误, 请重新尝试获取' % area)
+        qqbot.logger.info("数据有误, 请重新尝试获取" % area)
         return "数据获取有误, 请尝试重新获取"
