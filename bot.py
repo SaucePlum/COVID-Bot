@@ -22,7 +22,7 @@ async def _invalid_func(event: str, message: qqbot.Message):
     """
     当参数不符合要求时的处理函数
     """
-    await _send_message("请在指令后带上城市名称\n例如\r\n/疫情 深圳", event, message)
+    await _send_message("请在指令后带上城市名称\n例如\r\n/疫情 深圳\r\n/风险地区 深圳", event, message)
     return True
 
 
@@ -49,7 +49,7 @@ async def ask_menu(city_name: str, event: str, message: qqbot.Message):
     return True
 
 
-@command("/疫情")
+@command("/疫情", check_param=True, invalid_func=_invalid_func)
 async def ask_covid(city_name: str, event: str, message: qqbot.Message):
     city_name = "中国" if city_name is None else city_name
     ret = get_covid_data(city_name)
