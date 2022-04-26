@@ -1,3 +1,2 @@
 pyyaml
 qq-bot
-requests
