@@ -206,7 +206,7 @@ async def get_grade_data(area: str) -> str:
         for i in highRiskAreaList:
             for j in i["list"]:
                 if j["cityName"] in [area, area + "市"]:
-                    high_risk_msg += f"  {j['areaName']} {j['communityName']}\n"
+                    high_risk_msg += f"{j['areaName']} {j['communityName']}\n"
         if len(high_risk_msg) > 0:
             high_risk_msg = high_risk_msg.replace("、", "\n")
             msg += "\n" + high_risk_msg + "\n"
