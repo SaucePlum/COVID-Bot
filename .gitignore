@@ -3,3 +3,4 @@
 config.yml
 qqbot.log
 .gitignore
+test.py

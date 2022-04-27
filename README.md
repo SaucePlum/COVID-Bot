@@ -1,7 +1,5 @@
-# COVID-Bot
-QQ频道机器人-疫情助手V2.0
-> 查询国内疫情最新动态、疫情资讯、风险地区、出行政策、疫情科普、防疫热线等服务
-
+# QQ频道机器人-疫情助手
+该代码库是基于QQ机器人框架进行开发的机器人，用于服务查询国内疫情最新动态、疫情资讯、风险地区、出行政策、疫情科普、防疫热线等服务
 
 赞助开发者：[爱发电](https://afdian.net/@nian-bot)
 
@@ -9,7 +7,7 @@ QQ频道机器人-疫情助手V2.0
 )
 
 
-## 使用方法
+## 机器人指令
 
 ```
 /疫情 城市
@@ -33,6 +31,48 @@ QQ频道机器人-疫情助手V2.0
     查询当地防疫热线电话
     示例：/防疫热线 深圳
 ```
+
+## 使用方法
+使用代码库前需要配置好相关的信息，可以跟随下面的步骤进行
+
+### 环境安装
+py包的依赖配置，通过`pip install -r requirements.txt` 可以安装所有的依赖包
+
+### 环境配置
+拷贝根目录的 `config.example.yaml` 为 `config.yaml`
+```shell
+cp config.example.yaml config.yaml
+```
+
+修改 `config.yaml` ，填入自己的 BotAppID 和 Bot token 以及其他相关参数，参数介绍如下
+
+```shell
+token:
+  appid: "123" # 机器人appid
+  token: "xxx" # 机器人token
+```
+
+### 运行机器人
+在代码库根目录执行下面命令
+```shell
+python3 bot.py
+```
+
+## 代码说明
+```
+.
+├── LICENSE
+├── README.md
+├── .gitignore 
+├── config.example.yaml # 配置文件模版
+├── config.yaml         # 实际的读取配置文件（需要自己从demo复制一份修改参数）
+├── util.py             # 字符相关的处理
+├── command_register.py # 指令的装饰器处理
+├── requirements.txt    # py包的依赖配置，通过`pip install -r requirements.txt` 可以安装所有的依赖包
+├── bot.py              # 程序运行入口，包括不同指令的处理
+```
+
+
 
 ## 特别感谢
 
