@@ -192,7 +192,7 @@ def run():
     qqbot_direct_handler = qqbot.Handler(
         qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _message_handler
     )
-    qqbot.async_listen_events(T_TOKEN, False, qqbot_handler, qqbot_direct_handler)
+    qqbot.async_listen_events(T_TOKEN, True, qqbot_handler, qqbot_direct_handler)
 
 
 if __name__ == "__main__":

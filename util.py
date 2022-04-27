@@ -41,9 +41,7 @@ def get_menu():
     示例：/疫情科普
 /防疫热线 城市
     查询当地防疫热线电话
-    示例：/防疫热线 深圳
-    
-"""
+    示例：/防疫热线 深圳"""
 
 
 async def get_covid_data(area: str) -> str:
@@ -154,6 +152,7 @@ async def get_covid_data(area: str) -> str:
 
 
 async def get_grade_data(area: str) -> str:
+    type_ = ''
     area = area.split()[0]
     if "省" in area:
         area = area.split("省")[0]
@@ -190,38 +189,33 @@ async def get_grade_data(area: str) -> str:
         mediumRiskAreaList = risk_area_data["mediumRiskAreaList"]
         highRiskAreaList = risk_area_data["highRiskAreaList"]
 
-        # （吉林市上面没移除“市”）
-        if area[-1] == "市":
-            area = area[0:-1]
-        msg = "{}风险地区详情:\n🟠 中风险地区\n".format(area)
+        msg = "\t\t\t\t{}{}风险地区信息\n===========================\n中风险地区: ".format(area, type_)
         mid_risk_msg = ""
         for i in mediumRiskAreaList:
             for j in i["list"]:
                 if j["cityName"] in [area, area + "市"]:
-                    mid_risk_msg += f"  {j['areaName']} {j['communityName']}\n"
+                    mid_risk_msg += f"{j['areaName']} {j['communityName']}\n"
         if len(mid_risk_msg) > 0:
-            mid_risk_msg = mid_risk_msg.replace("、", "\n  ")
-            msg += mid_risk_msg + "\n"
+            mid_risk_msg = mid_risk_msg.replace("、", "\n")
+            msg += "\n" + mid_risk_msg + "\n"
         else:
             msg += "暂无风险地区\n"
 
-        msg += "🔴 高风险地区\n"
+        msg += "高风险地区: "
         high_risk_msg = ""
         for i in highRiskAreaList:
             for j in i["list"]:
                 if j["cityName"] in [area, area + "市"]:
                     high_risk_msg += f"  {j['areaName']} {j['communityName']}\n"
         if len(high_risk_msg) > 0:
-            high_risk_msg = high_risk_msg.replace("、", "\n  ")
-            msg += high_risk_msg + "\n"
+            high_risk_msg = high_risk_msg.replace("、", "\n")
+            msg += "\n" + high_risk_msg + "\n"
         else:
-            msg += "暂无风险地区\n"
-
+            msg += "暂无风险地区"
         qqbot.logger.info("数据处理成功, %s新冠肺炎疫情风险地区已发送" % area)
         return msg
     except Exception as e:
-        qqbot.logger.info(e)
-        qqbot.logger.info("数据有误, 请重新尝试获取" % area)
+        qqbot.logger.info("数据有误, 请重新尝试获取")
         return "数据获取有误, 请尝试重新获取"
 
 
