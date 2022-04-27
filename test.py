@@ -7,13 +7,22 @@ Author: NianGui
 Time  : 2022/4/26 0026 21:54
 """
 
-
-import json
 import requests
+from bs4 import BeautifulSoup
+url = 'https://heihaoma.com/i-fangyi'
+res = requests.get(url).text
+content = BeautifulSoup(res, 'html.parser')
+data_first = content.find('div', attrs={'id' : 'container'})
+data_two = data_first.find_all('li')
 
-url = 'https://file1.dxycdn.com/2020/0223/046/3398299755968039975-135.json'
+for city_data in data_two:
+    city_name = city_data.find('div',attrs={'class' : 'contact-tit'}).text
+    city_phone = city_data.find('div',attrs={'class' : 'contact-phone'}).text
 
 
-content = requests.get(url).json()['data']
 
-print(content)
+
+# city_list = etree_html.xpath('//*[@id="container"]/li/text()')
+#
+# for city in city_list:
+#     print(city)

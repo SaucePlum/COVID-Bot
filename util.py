@@ -11,8 +11,7 @@ import time
 
 import qqbot
 import requests
-
-# 丁香园风险地区: https://file1.dxycdn.com/2021/0127/904/9385768311460321643-135.json?t=27516331
+from bs4 import BeautifulSoup
 
 # 疫情数据API > 腾讯
 covid_url = "https://api.inews.qq.com/newsqa/v1/query/inner/publish/modules/list?modules=statisGradeCityDetail,diseaseh5Shelf"
@@ -40,6 +39,10 @@ def get_menu():
 /疫情科普
     防范疫情科普知识
     示例：/疫情科普
+/防疫热线
+    查询当地防疫热线电话
+    示例：/防疫热线 深圳
+    
 """
 
 
@@ -47,6 +50,7 @@ async def get_covid_data(area: str) -> str:
     type_ = ""
     result = {}
     msg = ""
+    area = area.split()[0]
     # 判断要查询的地区级
     if "省" in area:
         area = area.split("省")[0]
@@ -150,6 +154,7 @@ async def get_covid_data(area: str) -> str:
 
 
 async def get_grade_data(area: str) -> str:
+    area = area.split()[0]
     if "省" in area:
         area = area.split("省")[0]
         type_ = "(省)"
@@ -242,17 +247,18 @@ async def get_news_data():
     return "新冠肺炎疫情最新资讯动态\n===========================\n" + "".join(data_append)
 
 
-async def get_policy(city_name):
+async def get_policy(area: str) -> str:
     url_city_list = 'https://r.inews.qq.com/api/trackmap/citylist?'
     city_list_raw = requests.get(url_city_list)
     city_list = city_list_raw.json()
     msg = ""
     from_id = ''
     to_id = ''
+    area = area.split()[0]
     if city_list['status'] == 0 and city_list['message'] == "success":
         for province in city_list['result']:
             for city in province['list']:
-                if city_name == city['name']:
+                if area == city['name']:
                     from_id = city['id']
     else:
         msg += "城市列表请求错误"
@@ -269,10 +275,10 @@ async def get_policy(city_name):
     if policy['status'] == 0 and policy['message'] == "success":
         try:
             data_leave = policy['result']['data'][0]
-            msg += f"{city_name}离开政策：{data_leave['leave_policy'].strip()}\n于{data_leave['leave_policy_date']}更新\n\n"
-            msg += f"{city_name}出入政策：\n"
+            msg += f"{area}离开政策：{data_leave['leave_policy'].strip()}\n于{data_leave['leave_policy_date']}更新\n\n"
+            msg += f"{area}出入政策：\n"
             msg += f"{data_leave['back_policy'].strip()}\n于{data_leave['back_policy_date']}更新\n\n"
-            msg += f"{city_name}酒店政策：\n{data_leave['stay_info'].strip()}\n\n"
+            msg += f"{area}酒店政策：\n{data_leave['stay_info'].strip()}\n\n"
             msg += "免责声明：以上所有数据来源于腾讯新闻出行防疫政策查询"
         except IndexError:
             msg = ''
@@ -280,17 +286,16 @@ async def get_policy(city_name):
         msg += "政策请求错误"
     return msg
 
-# get_policy('吉安')
 
-
-
-async def get_policys(from_city, to_city):
+async def get_policys(from_city: str, to_city: str) -> str:
     url_city_list = 'https://r.inews.qq.com/api/trackmap/citylist?'
     city_list_raw = requests.get(url_city_list)
     city_list = city_list_raw.json()
     msg = ""
     from_id = ''
     to_id = ''
+    from_city = from_city.split()[0]
+    to_city = to_city.split()[0]
     if city_list['status'] == 0 and city_list['message'] == "success":
         for province in city_list['result']:
             for city in province['list']:
@@ -329,3 +334,20 @@ async def get_policys(from_city, to_city):
         msg += "政策请求错误"
     return msg
 
+
+async def get_covid_phone(area: str) -> str:
+    msg = ''
+    area = area.split()[0]
+    res = requests.get('https://heihaoma.com/i-fangyi').text
+    content = BeautifulSoup(res, 'html.parser')
+    data_first = content.find('div', attrs={'id': 'container'})
+    data_two = data_first.find_all('li')
+    data_append = []
+    for city_data in data_two:
+        city_name = city_data.find('div', attrs={'class': 'contact-tit'}).text
+        city_phone = city_data.find('div', attrs={'class': 'contact-phone'}).text
+        data_append.append(city_name + '：' + city_phone)
+    for data_phone in data_append:
+        if area in data_phone:
+            msg += data_phone + '\n'
+    return msg

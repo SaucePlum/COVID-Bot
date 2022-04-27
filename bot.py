@@ -13,7 +13,7 @@ import qqbot
 from qqbot.core.util.yaml_util import YamlUtil
 
 from command_register import command
-from util import get_menu, get_covid_data, get_grade_data, get_news_data, get_policy, get_policys
+from util import get_menu, get_covid_data, get_grade_data, get_news_data, get_policy, get_policys, get_covid_phone
 
 config = YamlUtil.read(os.path.join(os.path.dirname(__file__), "config.yml"))
 T_TOKEN = qqbot.Token(config["bot"]["appid"], config["bot"]["token"])
@@ -138,6 +138,16 @@ async def ask_covid(city_name: str, event: str, message: qqbot.Message):
     return True
 
 
+@command("/防疫热线", check_param=True, invalid_func=_invalid_func)
+async def ask_covid_phone(city_name: str, event: str, message: qqbot.Message):
+    ret = await get_covid_phone(city_name)
+    if ret == '':
+        await _send_message('未找到该地防疫热线电话', event, message)
+        return True
+    await _send_message(ret, event, message)
+    return True
+
+
 @command("/风险地区", check_param=True, invalid_func=_invalid_func)
 async def ask_grade(city_name: str, event: str, message: qqbot.Message):
     ret = await get_grade_data(city_name)
@@ -161,12 +171,13 @@ async def _message_handler(event: str, message: qqbot.Message):
         ask_news, # /疫情资讯
         ask_policy, # /出行政策
         ask_covid,  # /疫情
+        ask_covid_phone, # /防疫热线
         ask_grade,  # /风险地区
     ]
     for task in tasks:
         if await task("", event, message):
             return
-    await _send_message("抱歉，没明白你的意思呢。" + get_menu(), event, message)
+    await _send_message("抱歉，没明白你的意思呢。\n" + get_menu(), event, message)
 
 
 def run():
@@ -181,7 +192,7 @@ def run():
     qqbot_direct_handler = qqbot.Handler(
         qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _message_handler
     )
-    qqbot.async_listen_events(T_TOKEN, True, qqbot_handler, qqbot_direct_handler)
+    qqbot.async_listen_events(T_TOKEN, False, qqbot_handler, qqbot_direct_handler)
 
 
 if __name__ == "__main__":
