@@ -38,13 +38,15 @@ def get_menu():
     示例：/疫情资讯
 /疫情科普
     防范疫情科普知识
-    示例：/疫情科普
-/防疫热线 城市
-    查询当地防疫热线电话
-    示例：/防疫热线 深圳"""
+    示例：/疫情科普"""
 
 
 async def get_covid_data(area: str) -> str:
+    """
+    获取疫情数据
+    :param area: 城市
+    :return:
+    """
     type_ = ""
     result = {}
     msg = ""
@@ -152,6 +154,11 @@ async def get_covid_data(area: str) -> str:
 
 
 async def get_grade_data(area: str) -> str:
+    """
+    获取风险地区
+    :param area:
+    :return:
+    """
     type_ = ''
     area = area.split()[0]
     if "省" in area:
@@ -220,6 +227,10 @@ async def get_grade_data(area: str) -> str:
 
 
 async def get_news_data():
+    """
+    获取新冠肺炎最新资讯
+    :return:
+    """
     qqbot.logger.info("正在获取新冠肺炎疫情最新资讯动态")
     raw_data = requests.get(news_url).text
     raw_data = json.loads('['+raw_data+']')[0]
@@ -242,6 +253,11 @@ async def get_news_data():
 
 
 async def get_policy(area: str) -> str:
+    """
+    出行政策单个
+    :param area: 城市
+    :return:
+    """
     url_city_list = 'https://r.inews.qq.com/api/trackmap/citylist?'
     city_list_raw = requests.get(url_city_list)
     city_list = city_list_raw.json()
@@ -282,6 +298,12 @@ async def get_policy(area: str) -> str:
 
 
 async def get_policys(from_city: str, to_city: str) -> str:
+    """
+    双向出行政策
+    :param from_city: 出发城市
+    :param to_city: 抵达城市
+    :return:
+    """
     url_city_list = 'https://r.inews.qq.com/api/trackmap/citylist?'
     city_list_raw = requests.get(url_city_list)
     city_list = city_list_raw.json()
@@ -328,8 +350,13 @@ async def get_policys(from_city: str, to_city: str) -> str:
         msg += "政策请求错误"
     return msg
 
-
+# 失效
 async def get_covid_phone(area: str) -> str:
+    """
+    防疫热线
+    :param area: 城市
+    :return:
+    """
     msg = ''
     area = area.split()[0]
     res = requests.get('https://heihaoma.com/i-fangyi').text

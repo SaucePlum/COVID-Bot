@@ -171,7 +171,7 @@ async def _message_handler(event: str, message: qqbot.Message):
         ask_news, # /疫情资讯
         ask_policy, # /出行政策
         ask_covid,  # /疫情
-        ask_covid_phone, # /防疫热线
+        # ask_covid_phone, # /防疫热线  失效
         ask_grade,  # /风险地区
     ]
     for task in tasks:
