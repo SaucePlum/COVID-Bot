@@ -7,6 +7,7 @@ Author: NianGui
 Time  : 2022/4/23 1:01
 """
 import json
+import os
 import time
 
 import qqbot
@@ -38,7 +39,10 @@ def get_menu():
     示例：/疫情资讯
 /疫情科普
     防范疫情科普知识
-    示例：/疫情科普"""
+    示例：/疫情科普
+/防疫热线 城市
+    查询当地防疫热线电话
+    示例：/防疫热线 深圳"""
 
 
 async def get_covid_data(area: str) -> str:
@@ -88,7 +92,7 @@ async def get_covid_data(area: str) -> str:
         if area in ("中国", "国内"):
             qqbot.logger.info("检测到获取国内数据,数据处理中")
             data.pop("areaTree")
-            msg += "\t\t🇨🇳国内新冠肺炎疫情最新动态🇨🇳\n===========================\n"
+            msg += "———国内新冠肺炎疫情最新动态———\n\n"
             msg += "🟠 现存确诊(含港澳台)：{} + {}\n".format(
                 data["chinaTotal"]["nowConfirm"], data["chinaAdd"]["confirm"]
             )
@@ -123,7 +127,7 @@ async def get_covid_data(area: str) -> str:
                     type_ = "(市)"
         try:
             qqbot.logger.info("检测到获取%s%s数据,数据处理中" % (area, type_))
-            msg += "\t\t{}{}新冠肺炎疫情最新动态\n===========================\n".format(
+            msg += "— {}{}新冠肺炎疫情最新动态 —\n\n".format(
                 area, type_
             )
             if result["today"]["confirm"] > 0:
@@ -143,9 +147,9 @@ async def get_covid_data(area: str) -> str:
             msg += f"🔴 累计死亡：{result['total']['dead']} ({(result['total']['dead'] / result['total']['confirm'] * 100):.2f}%)\n"
             msg += f"🟢 累计治愈：{result['total']['heal']} ({(result['total']['heal'] / result['total']['confirm'] * 100):.2f}%)\n"
             if result["today"]["isUpdated"]:
-                msg += "⏳︎ 最后更新时间：\n     {}".format(data["lastUpdateTime"])
+                msg += "⏳  更新时间：{}".format(data["lastUpdateTime"])
             else:
-                msg += "⏳︎ 最后更新时间：当日暂无更新"
+                msg += "⏳  更新时间：当日暂无更新"
             qqbot.logger.info("数据处理成功, %s%s最新疫情消息已发送" % (area, type_))
         except KeyError as e:
             msg = ""
@@ -196,26 +200,26 @@ async def get_grade_data(area: str) -> str:
         mediumRiskAreaList = risk_area_data["mediumRiskAreaList"]
         highRiskAreaList = risk_area_data["highRiskAreaList"]
 
-        msg = "\t\t\t\t{}{}风险地区信息\n===========================\n中风险地区: ".format(area, type_)
+        msg = "—{}{}新冠肺炎疫情最新动态—\n\n🔰 中风险地区：".format(area, type_)
         mid_risk_msg = ""
         for i in mediumRiskAreaList:
             for j in i["list"]:
                 if j["cityName"] in [area, area + "市"]:
-                    mid_risk_msg += f"{j['areaName']} {j['communityName']}\n"
+                    mid_risk_msg += f"\n🪐 {j['areaName']} \n🏠 {j['communityName']}\n"
         if len(mid_risk_msg) > 0:
-            mid_risk_msg = mid_risk_msg.replace("、", "\n")
+            mid_risk_msg = mid_risk_msg.replace("、", "\n🏠 ")
             msg += "\n" + mid_risk_msg + "\n"
         else:
-            msg += "暂无风险地区\n"
+            msg += "暂无风险地区\n——————————————————\n\n"
 
-        msg += "高风险地区: "
+        msg += "🔰 高风险地区："
         high_risk_msg = ""
         for i in highRiskAreaList:
             for j in i["list"]:
                 if j["cityName"] in [area, area + "市"]:
-                    high_risk_msg += f"{j['areaName']} {j['communityName']}\n"
+                    high_risk_msg += f"\n🪐 {j['areaName']} \n🏠 {j['communityName']}\n"
         if len(high_risk_msg) > 0:
-            high_risk_msg = high_risk_msg.replace("、", "\n")
+            high_risk_msg = high_risk_msg.replace("、", "\n🏠 ")
             msg += "\n" + high_risk_msg + "\n"
         else:
             msg += "暂无风险地区"
@@ -245,11 +249,11 @@ async def get_news_data():
         for i in range(len(data)):
             if i < 5:
                 update_time = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(int(data[i]['eventTime'])))
-                msg = data[i]['eventDescription'] + '\n更新来源: ' + data[i]['siteName'] + '\n更新时间: ' + update_time
-                msg += '\n===========================\n'
+                msg = '📰 资讯详情\n> ' + data[i]['eventDescription'] + '\n🗞️ 更新来源：' + data[i]['siteName'] + '\n⏳ 更新时间：' + update_time
+                msg += '\n——————————————————\n\n'
                 data_append.append(msg)
         qqbot.logger.info('数据处理成功, 新冠肺炎疫情最新资讯动态已发送')
-    return "新冠肺炎疫情最新资讯动态\n===========================\n" + "".join(data_append)
+    return "———新冠肺炎疫情最新资讯动态———\n\n" + "".join(data_append)
 
 
 async def get_policy(area: str) -> str:
@@ -288,7 +292,7 @@ async def get_policy(area: str) -> str:
             msg += f"{area}离开政策：{data_leave['leave_policy'].strip()}\n于{data_leave['leave_policy_date']}更新\n\n"
             msg += f"{area}出入政策：\n"
             msg += f"{data_leave['back_policy'].strip()}\n于{data_leave['back_policy_date']}更新\n\n"
-            msg += f"{area}酒店政策：\n{data_leave['stay_info'].strip()}\n\n"
+            msg += f"{area}酒店政策：{data_leave['stay_info'].strip()}\n\n"
             msg += "免责声明：以上所有数据来源于腾讯新闻出行防疫政策查询"
         except IndexError:
             msg = ''
@@ -342,7 +346,7 @@ async def get_policys(from_city: str, to_city: str) -> str:
             else:
                 msg += f"{from_city}离开政策：{data_leave['leave_policy'].strip()}\n于{data_leave['leave_policy_date']}更新\n\n"
                 msg += f"{to_city}进入政策：\n{data_to['back_policy'].strip()}\n于{data_to['back_policy_date']}更新\n\n"
-            msg += f"{to_city}酒店政策：\n{data_to['stay_info'].strip()}\n\n"
+            msg += f"{to_city}酒店政策：{data_to['stay_info'].strip()}\n\n"
             msg += "免责声明：以上所有数据来源于腾讯新闻出行防疫政策查询"
         except IndexError:
             msg = ''
@@ -350,7 +354,7 @@ async def get_policys(from_city: str, to_city: str) -> str:
         msg += "政策请求错误"
     return msg
 
-# 失效
+
 async def get_covid_phone(area: str) -> str:
     """
     防疫热线
@@ -359,7 +363,13 @@ async def get_covid_phone(area: str) -> str:
     """
     msg = ''
     area = area.split()[0]
-    res = requests.get('https://heihaoma.com/i-fangyi').text
+    if os.path.exists('data.html'):
+        with open('data.html', 'r', encoding='utf-8') as c:
+            res = c.read()
+    else:
+        res = requests.get('https://heihaoma.com/i-fangyi').text
+        with open('data.html', 'w+', encoding='utf-8') as c:
+            c.write(res)
     content = BeautifulSoup(res, 'html.parser')
     data_first = content.find('div', attrs={'id': 'container'})
     data_two = data_first.find_all('li')
@@ -370,5 +380,5 @@ async def get_covid_phone(area: str) -> str:
         data_append.append(city_name + '：' + city_phone)
     for data_phone in data_append:
         if area in data_phone:
-            msg += data_phone + '\n'
-    return msg
+            msg += '\n' + data_phone
+    return f'————— {area}防疫热线 —————\n' + msg

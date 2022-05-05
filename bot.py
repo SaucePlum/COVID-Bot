@@ -23,7 +23,7 @@ async def _invalid_func(event: str, message: qqbot.Message):
     """
     当参数不符合要求时的处理函数
     """
-    await _send_message("请在指令后带上城市名称\n例如\r\n/疫情 深圳\r\n/风险地区 深圳", event, message)
+    await _send_message("请在指令后带上城市名称\n\n" + get_menu(), event, message)
     return True
 
 
@@ -171,7 +171,7 @@ async def _message_handler(event: str, message: qqbot.Message):
         ask_news, # /疫情资讯
         ask_policy, # /出行政策
         ask_covid,  # /疫情
-        # ask_covid_phone, # /防疫热线  失效
+        ask_covid_phone, # /防疫热线
         ask_grade,  # /风险地区
     ]
     for task in tasks:
@@ -192,7 +192,7 @@ def run():
     qqbot_direct_handler = qqbot.Handler(
         qqbot.HandlerType.DIRECT_MESSAGE_EVENT_HANDLER, _message_handler
     )
-    qqbot.async_listen_events(T_TOKEN, True, qqbot_handler, qqbot_direct_handler)
+    qqbot.async_listen_events(T_TOKEN, False, qqbot_handler, qqbot_direct_handler)
 
 
 if __name__ == "__main__":
