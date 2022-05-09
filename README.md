@@ -1,4 +1,4 @@
-# QQ频道机器人-疫情助手
+# QQ频道机器人-疫情助手(已上官方推荐)
 
 该代码库是基于QQ机器人框架进行开发的机器人，用于服务查询国内疫情最新动态、疫情资讯、风险地区、出行政策、疫情科普、防疫热线等服务
 
@@ -39,13 +39,13 @@ py包的依赖配置，通过`pip install -r requirements.txt` 可以安装所�
 
 ### 环境配置
 
-拷贝根目录的 `config.example.yaml` 为 `config.yaml`
+拷贝根目录的 `config.example.yml` 为 `config.yml`
 
 ```shell
 cp config.example.yaml config.yaml
 ```
 
-修改 `config.yaml` ，填入自己的 BotAppID 和 Bot token 以及其他相关参数，参数介绍如下
+修改 `config.yml` ，填入自己的 BotAppID 和 Bot token 以及其他相关参数，参数介绍如下
 
 ```shell
 token:
@@ -67,8 +67,8 @@ python3 bot.py
     ├── LICENSE
     ├── README.md
     ├── .gitignore 
-    ├── config.example.yaml # 配置文件模版
-    ├── config.yaml         # 实际的读取配置文件（需要自己从demo复制一份修改参数）
+    ├── config.example.yml # 配置文件模版
+    ├── config.yml         # 实际的读取配置文件（需要自己从demo复制一份修改参数）
     ├── util.py             # 字符相关的处理
     ├── command_register.py # 指令的装饰器处理
     ├── requirements.txt    # py包的依赖配置，通过`pip install -r requirements.txt` 可以安装所有的依赖包
@@ -76,7 +76,6 @@ python3 bot.py
 
 ## 特别感谢
 
--   [油价助手](https://github.com/wzpan/oil-price-bot/) 为疫情助手提供指令注册
 -   [Python SDK](https://github.com/tencent-connect/botpy) 为疫情助手开发提供SDK
 
 ## 免责声明
