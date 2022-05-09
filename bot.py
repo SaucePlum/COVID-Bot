@@ -19,17 +19,29 @@ config = YamlUtil.read(os.path.join(os.path.dirname(__file__), "config.yml"))
 T_TOKEN = qqbot.Token(config["bot"]["appid"], config["bot"]["token"])
 
 
-async def _invalid_func(event: str, message: qqbot.Message):
-    """
-    当参数不符合要求时的处理函数
-    """
-    await _send_message("请在指令后带上城市名称\n\n" + get_menu(), event, message)
+async def covid(event: str, message: qqbot.Message):
+    await _send_message("请在指令后带上城市名称\n\n例如：@疫情助手 /疫情 深圳", event, message)
     return True
 
+async def grade(event: str, message: qqbot.Message):
+    await _send_message("请在指令后带上城市名称\n\n例如：@疫情助手 /风险地区 深圳", event, message)
+    return True
 
-async def _send_message(
-    content: str, event: str, message: qqbot.Message, image: str = None
-):
+async def covid_phone(event: str, message: qqbot.Message):
+    await _send_message("请在指令后带上城市名称\n\n例如：@疫情助手 /防疫热线 深圳", event, message)
+    return True
+
+async def policy(event: str, message: qqbot.Message):
+    await _send_message(
+        "请在指令后带上城市名称\n\n"
+        "当地政策：@疫情助手 /出行政策 深圳\n"
+        "两地政策：@疫情助手 /出行政策 深圳-广州",
+        event,
+        message
+    )
+    return True
+
+async def _send_message(content: str, event: str, message: qqbot.Message, image: str = None):
     """
     机器人发送消息
     """
@@ -42,12 +54,10 @@ async def _send_message(
     else:
         await msg_api.post_message(message.channel_id, send)
 
-
 @command("/菜单")
 async def ask_menu(city_name: str, event: str, message: qqbot.Message):
     await _send_message(get_menu(), event, message)
     return True
-
 
 @command("/疫情资讯")
 async def ask_news(city_name: str, event: str, message: qqbot.Message):
@@ -55,8 +65,7 @@ async def ask_news(city_name: str, event: str, message: qqbot.Message):
     await _send_message(ret, event, message)
     return True
 
-
-@command("/出行政策", check_param=True, invalid_func=_invalid_func)
+@command("/出行政策", check_param=True, invalid_func=policy)
 async def ask_policy(city_name: str, event: str, message: qqbot.Message):
     if '-' in city_name:
         from_city = city_name.split('-')[0]
@@ -69,7 +78,6 @@ async def ask_policy(city_name: str, event: str, message: qqbot.Message):
         return True
     await _send_message(ret, event, message)
     return True
-
 
 @command("/疫情科普")
 async def ask_science(city_name: str, event: str, message: qqbot.Message):
@@ -126,8 +134,7 @@ async def ask_science(city_name: str, event: str, message: qqbot.Message):
 
     return True
 
-
-@command("/疫情", check_param=True, invalid_func=_invalid_func)
+@command("/疫情", check_param=True, invalid_func=covid)
 async def ask_covid(city_name: str, event: str, message: qqbot.Message):
     city_name = "中国" if city_name is None else city_name
     ret = await get_covid_data(city_name)
@@ -137,8 +144,7 @@ async def ask_covid(city_name: str, event: str, message: qqbot.Message):
     await _send_message(ret, event, message)
     return True
 
-
-@command("/防疫热线", check_param=True, invalid_func=_invalid_func)
+@command("/防疫热线", check_param=True, invalid_func=covid_phone)
 async def ask_covid_phone(city_name: str, event: str, message: qqbot.Message):
     ret = await get_covid_phone(city_name)
     if ret == '':
@@ -147,14 +153,11 @@ async def ask_covid_phone(city_name: str, event: str, message: qqbot.Message):
     await _send_message(ret, event, message)
     return True
 
-
-@command("/风险地区", check_param=True, invalid_func=_invalid_func)
+@command("/风险地区", check_param=True, invalid_func=grade)
 async def ask_grade(city_name: str, event: str, message: qqbot.Message):
     ret = await get_grade_data(city_name)
     await _send_message(ret, event, message)
     return True
-
-
 
 
 async def _message_handler(event: str, message: qqbot.Message):

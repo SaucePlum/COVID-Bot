@@ -1,6 +1,6 @@
 /venv/
-/.idea
+.idea
 config.yml
-qqbot.log
+*.log
 .gitignore
 test.py

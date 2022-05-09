@@ -289,7 +289,7 @@ async def get_policy(area: str) -> str:
     if policy['status'] == 0 and policy['message'] == "success":
         try:
             data_leave = policy['result']['data'][0]
-            msg += f"{area}离开政策：{data_leave['leave_policy'].strip()}\n于{data_leave['leave_policy_date']}更新\n\n"
+            msg += f"{area}离开政策：\n{data_leave['leave_policy'].strip()}\n于{data_leave['leave_policy_date']}更新\n\n"
             msg += f"{area}出入政策：\n"
             msg += f"{data_leave['back_policy'].strip()}\n于{data_leave['back_policy_date']}更新\n\n"
             msg += f"{area}酒店政策：{data_leave['stay_info'].strip()}\n\n"
@@ -344,7 +344,7 @@ async def get_policys(from_city: str, to_city: str) -> str:
                 msg += f"{data_to['back_policy'].strip()}\n于{data_to['back_policy_date']}更新\n\n"
                 msg += "\n"
             else:
-                msg += f"{from_city}离开政策：{data_leave['leave_policy'].strip()}\n于{data_leave['leave_policy_date']}更新\n\n"
+                msg += f"{from_city}离开政策：\n{data_leave['leave_policy'].strip()}\n于{data_leave['leave_policy_date']}更新\n\n"
                 msg += f"{to_city}进入政策：\n{data_to['back_policy'].strip()}\n于{data_to['back_policy_date']}更新\n\n"
             msg += f"{to_city}酒店政策：{data_to['stay_info'].strip()}\n\n"
             msg += "免责声明：以上所有数据来源于腾讯新闻出行防疫政策查询"
@@ -377,7 +377,7 @@ async def get_covid_phone(area: str) -> str:
     for city_data in data_two:
         city_name = city_data.find('div', attrs={'class': 'contact-tit'}).text
         city_phone = city_data.find('div', attrs={'class': 'contact-phone'}).text
-        data_append.append(city_name + '：' + city_phone)
+        data_append.append("☎️ " + city_name + '：' + city_phone)
     for data_phone in data_append:
         if area in data_phone:
             msg += '\n' + data_phone
