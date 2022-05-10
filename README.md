@@ -42,7 +42,7 @@ py包的依赖配置，通过`pip install -r requirements.txt` 可以安装所�
 拷贝根目录的 `config.example.yml` 为 `config.yml`
 
 ```shell
-cp config.example.yaml config.yaml
+cp config.example.yml config.yml
 ```
 
 修改 `config.yml` ，填入自己的 BotAppID 和 Bot token 以及其他相关参数，参数介绍如下
