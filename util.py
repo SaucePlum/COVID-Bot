@@ -363,12 +363,12 @@ async def get_covid_phone(area: str) -> str:
     """
     msg = ''
     area = area.split()[0]
-    if os.path.exists('data.html'):
-        with open('data.html', 'r', encoding='utf-8') as c:
+    if os.path.exists('data.dt'):
+        with open('data.dt', 'r', encoding='utf-8') as c:
             res = c.read()
     else:
         res = requests.get('https://heihaoma.com/i-fangyi').text
-        with open('data.html', 'w+', encoding='utf-8') as c:
+        with open('data.dt', 'w+', encoding='utf-8') as c:
             c.write(res)
     content = BeautifulSoup(res, 'html.parser')
     data_first = content.find('div', attrs={'id': 'container'})
