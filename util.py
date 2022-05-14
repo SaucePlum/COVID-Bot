@@ -144,8 +144,12 @@ async def get_covid_data(area: str) -> str:
                 else:
                     msg += "🟣 现存无症状：0 \n"
             msg += "🟡 累计确诊：{}\n".format(result["total"]["confirm"])
-            msg += f"🔴 累计死亡：{result['total']['dead']} ({(result['total']['dead'] / result['total']['confirm'] * 100):.2f}%)\n"
-            msg += f"🟢 累计治愈：{result['total']['heal']} ({(result['total']['heal'] / result['total']['confirm'] * 100):.2f}%)\n"
+            try:
+                msg += f"🔴 累计死亡：{result['total']['dead']} ({(result['total']['dead'] / result['total']['confirm'] * 100):.2f}%)\n"
+                msg += f"🟢 累计治愈：{result['total']['heal']} ({(result['total']['heal'] / result['total']['confirm'] * 100):.2f}%)\n"
+            except ZeroDivisionError:
+                msg += f"🔴 累计死亡：{result['total']['dead']}\n"
+                msg += f"🟢 累计治愈：{result['total']['heal']}\n"
             if result["today"]["isUpdated"]:
                 msg += "⏳  更新时间：{}".format(data["lastUpdateTime"])
             else:
@@ -197,12 +201,12 @@ async def get_grade_data(area: str) -> str:
         risk_area_data = risk_area_data.json()
         risk_area_data = risk_area_data["args"]["rsp"]
         qqbot.logger.info("%s新冠肺炎疫情风险地区获取成功, 正在解析中" % area)
-        mediumRiskAreaList = risk_area_data["mediumRiskAreaList"]
-        highRiskAreaList = risk_area_data["highRiskAreaList"]
+        medium_risk_area_list = risk_area_data["mediumRiskAreaList"]
+        high_risk_area_list = risk_area_data["highRiskAreaList"]
 
         msg = "—{}{}新冠肺炎疫情最新动态—\n\n🔰 中风险地区：".format(area, type_)
         mid_risk_msg = ""
-        for i in mediumRiskAreaList:
+        for i in medium_risk_area_list:
             for j in i["list"]:
                 if j["cityName"] in [area, area + "市"]:
                     mid_risk_msg += f"\n🪐 {j['areaName']} \n🏠 {j['communityName']}\n"
@@ -214,7 +218,7 @@ async def get_grade_data(area: str) -> str:
 
         msg += "🔰 高风险地区："
         high_risk_msg = ""
-        for i in highRiskAreaList:
+        for i in high_risk_area_list:
             for j in i["list"]:
                 if j["cityName"] in [area, area + "市"]:
                     high_risk_msg += f"\n🪐 {j['areaName']} \n🏠 {j['communityName']}\n"
