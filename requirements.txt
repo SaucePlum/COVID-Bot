@@ -1,3 +1,2 @@
-pyyaml
-qq-bot
+qq-botpy
 bs4

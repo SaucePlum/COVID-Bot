@@ -1,10 +1,20 @@
-# QQ频道机器人-疫情助手(已上官方推荐)
+<div align="center">
 
-该代码库是基于QQ机器人框架进行开发的机器人，用于服务查询国内疫情最新动态、疫情资讯、风险地区、出行政策、疫情科普、防疫热线等服务
+![botpy](https://socialify.git.ci/ReadSmall/COVID-Bot/image?description=1&font=Source%20Code%20Pro&forks=1&issues=1&language=1&logo=https%3A%2F%2Fgithub.com%2Ftencent-connect%2Fbot-docs%2Fblob%2Fmain%2Fdocs%2F.vuepress%2Fpublic%2Ffavicon-64px.png%3Fraw%3Dtrue&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
 
-赞助开发者：[爱发电](https://afdian.net/@nian-bot)
+[![Language](https://img.shields.io/badge/language-python-green.svg?style=plastic)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-orange.svg?style=plastic)](https://github.com/ReadSmall/COVID-Bot/blob/master/LICENSE)
+![Python](https://img.shields.io/badge/python-3.8+-blue)
+![PyPI](https://img.shields.io/pypi/v/qq-botpy)
+[![BK Pipelines Status](https://api.bkdevops.qq.com/process/api/external/pipelines/projects/qq-guild-open/p-713959939bdc4adca0eea2d4420eef4b/badge?X-DEVOPS-PROJECT-ID=qq-guild-open)](https://devops.woa.com/process/api-html/user/builds/projects/qq-guild-open/pipelines/p-713959939bdc4adca0eea2d4420eef4b/latestFinished?X-DEVOPS-PROJECT-ID=qq-guild-open)
 
-开发者频道：[点击加入开发者QQ频道](https://qun.qq.com/qqweb/qunpro/share?_wv=3&_wwv=128&appChannel=share&inviteCode=1MVLD4&appChannel=share&businessType=9&from=246610&biz=ka)
+_✨ QQ频道机器人-疫情助手 ✨_
+
+[爱发电](https://afdian.net/@nian-bot)
+·
+[开发者频道](https://qun.qq.com/qqweb/qunpro/share?_wv=3&_wwv=128&appChannel=share&inviteCode=1MVLD4&appChannel=share&businessType=9&from=246610&biz=ka)
+
+</div>
 
 ## 机器人指令
 
@@ -37,22 +47,6 @@
 
 py包的依赖配置，通过`pip install -r requirements.txt` 可以安装所有的依赖包
 
-### 环境配置
-
-拷贝根目录的 `config.example.yml` 为 `config.yml`
-
-```shell
-cp config.example.yml config.yml
-```
-
-修改 `config.yml` ，填入自己的 BotAppID 和 Bot token 以及其他相关参数，参数介绍如下
-
-```shell
-token:
-  appid: "123" # 机器人appid
-  token: "xxx" # 机器人token
-```
-
 ### 运行机器人
 
 在代码库根目录执行下面命令
@@ -67,8 +61,6 @@ python3 bot.py
     ├── LICENSE
     ├── README.md
     ├── .gitignore 
-    ├── config.example.yml # 配置文件模版
-    ├── config.yml         # 实际的读取配置文件（需要自己从demo复制一份修改参数）
     ├── util.py             # 字符相关的处理
     ├── command_register.py # 指令的装饰器处理
     ├── requirements.txt    # py包的依赖配置，通过`pip install -r requirements.txt` 可以安装所有的依赖包
